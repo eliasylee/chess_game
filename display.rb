@@ -30,12 +30,12 @@ class Display
     elsif [i, j] == @selected
       bg = :light_green
     elsif (i + j).odd?
-      bg = :light_blue
-    else
       bg = :white
+    else
+      bg = :light_blue
     end
 
-    { background: bg, color: @board[[i,j]].color  }
+    { background: bg, color: @board[[i,j]].color }
   end
 
   def render
@@ -47,6 +47,7 @@ class Display
 end
 
 b = Board.new
+b.populate_board
 d = Display.new(b)
 while true
   d.render

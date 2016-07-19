@@ -12,7 +12,7 @@ module SteppingPiece
 
   def not_valid?(end_pos)
     x, y = end_pos
-    return true unless x.between?(0,7) && x.between?(0,7)
+    return true unless x.between?(0,7) && y.between?(0,7)
     return true if @board[end_pos].color == self.color
     false
   end

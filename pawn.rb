@@ -10,7 +10,7 @@ class Pawn < Piece
 
   def moves
     moves = []
-    # byebug
+    
     move_dirs.each do |dir|
       end_pos = [@position.first + dir.first, @position.last]
       moves << end_pos unless not_valid_moves?(end_pos, dir)

@@ -46,10 +46,10 @@ class Display
   end
 end
 
-b = Board.new
-b.populate_board
-d = Display.new(b)
-while true
-  d.render
-  d.get_input
-end
+# b = Board.new
+# b.populate_board
+# d = Display.new(b)
+# while true
+#   d.render
+#   d.get_input
+# end

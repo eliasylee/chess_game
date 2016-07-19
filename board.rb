@@ -7,15 +7,15 @@ require_relative 'bishop'
 require_relative 'queen'
 require_relative 'king'
 require_relative 'pawn'
+require_relative 'invalid_move_error'
 
+require 'byebug'
 
 class Board
-  attr_reader :rows
+  attr_accessor :rows
 
-  # NULL = NullPiece.instance
-
-  def initialize
-    @rows = Array.new(8) {Array.new(8)}
+  def initialize(rows = Array.new(8) {Array.new(8)})
+    @rows = rows
   end
 
   def populate_board
@@ -45,17 +45,95 @@ class Board
     end
   end
 
-  def move(start_pos, end_pos)
-    #TODO: raise MoveError unless self[start_pos] = NullPiece
-    #TODO: raise OtherMoveError piece cannot move to end_pos
+  def move_piece!(start_pos, end_pos)
     self[end_pos], self[start_pos] = self[start_pos], self[end_pos]
     self[end_pos].position = end_pos
+  end
+
+  def move_piece(start_pos, end_pos)
+    piece = self[start_pos]
+    if piece.valid_moves.include?(end_pos)
+      move_piece!(start_pos, end_pos)
+    else
+      raise InvalidMoveError
+    end
   end
 
   def in_bounds?(pos)
     x, y = pos
     x.between?(0,7) && y.between?(0,7)
   end
+
+  def in_check?(color)
+    king_pos = find_king(color)
+
+    @rows.each_with_index do |row, i|
+      row.each_with_index do |piece, j|
+        if piece.color != color
+          return true if piece.moves.include?(king_pos)
+        end
+      end
+    end
+
+    false
+  end
+
+  def checkmate?(color)
+    if in_check?(color)
+      @rows.each_with_index do |row, i|
+        row.each_with_index do |piece, j|
+          if piece.color == color
+            return false unless piece.valid_moves.empty?
+          end
+        end
+      end
+    end
+
+    true
+  end
+
+  def find_king(color)
+    king_pos = nil
+    @rows.each_with_index do |row, i|
+      row.each_with_index do |piece, j|
+        king_pos = [i, j] if piece.is_a?(King) && color == piece.color
+        return king_pos unless king_pos.nil?
+      end
+    end
+  end
+
+  def deep_dup
+    dup_rows = []
+    dup_board = Board.new
+
+    self.rows.each do |row|
+      dup_row = []
+
+      row.each do |piece|
+        if piece.is_a?(NullPiece)
+          dup_row << piece
+          next
+        end
+
+        dup_piece = piece.dup
+        dup_piece.board = dup_board
+        dup_row << dup_piece
+      end
+
+      dup_rows << dup_row
+    end
+
+    dup_board.rows = dup_rows
+    dup_board
+  end
+
+  # def move_piece!(color, from_pos, to_pos)
+  #
+  # end
+  #
+  # def move_piece(from_pos, to_pos)
+  #   self.dup.move_piece!(from_pos, to_pos)
+  # end
 
   def [](pos)
     row, col = pos

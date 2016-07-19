@@ -8,10 +8,11 @@ class NullPiece
   end
 
   def moves
+    []
   end
 
   def color
-    :blue
+    nil
   end
 
   def to_s

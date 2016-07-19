@@ -46,8 +46,17 @@ class Board
   end
 
   def move_piece!(start_pos, end_pos)
-    self[end_pos], self[start_pos] = self[start_pos], self[end_pos]
+    if self[end_pos].is_a?(NullPiece)
+      self[end_pos], self[start_pos] = self[start_pos], self[end_pos]
+    else
+      take_piece(start_pos, end_pos)
+    end
+
     self[end_pos].position = end_pos
+  end
+
+  def take_piece(start_pos, end_pos)
+    self[end_pos], self[start_pos] = self[start_pos], NullPiece.instance
   end
 
   def move_piece(start_pos, end_pos)

@@ -9,8 +9,6 @@ require_relative 'king'
 require_relative 'pawn'
 require_relative 'invalid_move_error'
 
-require 'byebug'
-
 class Board
   attr_accessor :rows
 
@@ -34,9 +32,9 @@ class Board
           when 2, 5
             self[pos] = Bishop.new(pos, self)
           when 3
-            self[pos] = pos.first == 7 ? Queen.new(pos, self) : King.new(pos, self)
+            self[pos] = Queen.new(pos, self)
           when 4
-            self[pos] = pos.first == 7 ? King.new(pos, self) : Queen.new(pos, self)
+            self[pos] = King.new(pos, self)
           end
         else
           self[pos] = NullPiece.instance
@@ -64,6 +62,10 @@ class Board
     if piece.valid_moves.include?(end_pos)
       move_piece!(start_pos, end_pos)
     else
+      p piece.valid_moves
+      p start_pos
+      p end_pos
+      puts "hello"
       raise InvalidMoveError
     end
   end
@@ -89,16 +91,19 @@ class Board
 
   def checkmate?(color)
     if in_check?(color)
-      @rows.each_with_index do |row, i|
-        row.each_with_index do |piece, j|
+      # debugger
+      @rows.each do |row|
+        row.each do |piece|
           if piece.color == color
             return false unless piece.valid_moves.empty?
           end
         end
       end
+
+      return true
     end
 
-    true
+    false
   end
 
   def find_king(color)

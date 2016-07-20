@@ -3,10 +3,13 @@ module SlidingPiece
   def moves
     moves = []
     move_dirs.each do |dir|
+      current_position = @position
       while true
-        end_pos = [@position.first + dir.first, @position.last + dir.last]
-        break if not_valid?(end_pos) || piece_taken?(end_pos)
+        end_pos = [current_position.first + dir.first, current_position.last + dir.last]
+        break if not_valid?(end_pos)
         moves << end_pos
+        break if piece_taken?(end_pos)
+        current_position = end_pos
       end
     end
 
@@ -21,7 +24,7 @@ module SlidingPiece
   end
 
   def piece_taken?(end_pos)
-    @board[end_pos].color != self.color
+    @board[end_pos].color != self.color && !@board[end_pos].color.nil?
   end
 
 end

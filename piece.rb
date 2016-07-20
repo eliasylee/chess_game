@@ -5,7 +5,7 @@ class Piece
   def initialize(pos, board)
     @board = board
     @position = pos
-    @color = pos.first.between?(0,1) ? :black : :light_white
+    @color = pos.first.between?(0,1) ? :black : :white
   end
 
   def moves

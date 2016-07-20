@@ -5,6 +5,8 @@ require_relative 'cursorable'
 class Display
   include Cursorable
 
+  attr_accessor :selected
+
   def initialize(board)
     @board = board
     @cursor_pos = [0, 0]
@@ -30,7 +32,7 @@ class Display
     elsif [i, j] == @selected
       bg = :light_green
     elsif (i + j).odd?
-      bg = :white
+      bg = :blue
     else
       bg = :light_blue
     end

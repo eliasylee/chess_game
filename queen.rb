@@ -9,7 +9,7 @@ class Queen < Piece
   end
 
   def to_s
-    " \u265A ".encode('utf-8')
+    " \u265B ".encode('utf-8')
   end
 
 end

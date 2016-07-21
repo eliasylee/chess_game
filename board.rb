@@ -1,4 +1,3 @@
-require 'byebug'
 require_relative 'piece'
 require_relative 'null_piece'
 require_relative 'rook'
@@ -62,10 +61,6 @@ class Board
     if piece.valid_moves.include?(end_pos)
       move_piece!(start_pos, end_pos)
     else
-      p piece.valid_moves
-      p start_pos
-      p end_pos
-      puts "hello"
       raise InvalidMoveError
     end
   end

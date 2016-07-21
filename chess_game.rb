@@ -22,7 +22,9 @@ class ChessGame
     end
     winner = @current_player.color == :black ? @player_one : @player_two
     @display.render
-    puts "Congratulations! #{winner.name} won the game in #{turn_count} rounds!"
+    puts "*" * 50
+    puts "Congratulations! #{winner.name} won the game in #{turn_count/2} moves!"
+    puts "*" * 50
   end
 
   def play_turn
@@ -44,11 +46,13 @@ class ChessGame
 
     until start_pos
       start_pos = @display.get_input
+      unless start_pos.nil? || @board[start_pos].color == @current_player.color
+        @display.selected = nil
+        raise InvalidMoveError
+      end
+
       @display.render
     end
-
-    # debugger
-    # raise InvalidMoveError unless @board[start_pos].color == @current_player.color
 
     until end_pos
       end_pos = @display.get_input
@@ -66,24 +70,18 @@ end
 
 
 if __FILE__ == $PROGRAM_NAME
+  puts "*" * 50
   puts "Welcome to Chess!"
-  # num_players = nil
-  #
-  # until num_players == 1 || num_players == 2
-  #   puts "1-player or 2-player game?"
-  #   num_players = gets.chomp.to_i
-  # end
-  #
-  # puts "Player-1 enter your name."
-  # player_one_name = gets.chomp
-  #
-  # if num_players == 2
-  #   puts "Player-2 enter your name."
-  #   player_two_name = gets.chomp
-  # end
+  puts "*" * 50
 
-  # player_two = num_players == 1 ? ComputerPlayer.new("Deep Blue", :black) :
-  #   HumanPlayer.new(player_two_name, :black)
-  chess = ChessGame.new(HumanPlayer.new("Anthony", :white), HumanPlayer.new("Elias", :black))
+  print "Player-1 enter your name > "
+  player_one_name = gets.chomp
+  print "\n"
+
+  print "Player-2 enter your name > "
+  player_two_name = gets.chomp
+  print "\n"
+
+  chess = ChessGame.new(HumanPlayer.new(player_one_name, :white), HumanPlayer.new(player_two_name, :black))
   chess.play
 end

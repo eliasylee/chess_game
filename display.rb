@@ -27,31 +27,31 @@ class Display
   end
 
   def colors_for(i, j)
+
     if [i, j] == @cursor_pos
-      bg = :light_red
-    elsif [i, j] == @selected
+      bg = @selected.nil? ? :light_red : :green
+    elsif @selected && @board[@selected].valid_moves.include?([i,j])
       bg = :light_green
+    elsif [i, j] == @selected
+      bg = :green
     elsif (i + j).odd?
-      bg = :blue
+      bg = :light_black
     else
-      bg = :light_blue
+      bg = :light_white
     end
 
     { background: bg, color: @board[[i,j]].color }
   end
 
+  def color_possible_moves(piece)
+    piece.moves.each do |piece|
+      piece.to_s.colorize({background: :light_green})
+    end
+  end
+
   def render
     system("clear")
-    puts "Fill the grid!"
-    puts "Arrow keys, WASD, or vim to move, space or enter to confirm."
+    puts "Arrow keys or WASD to move, space or enter to confirm."
     build_grid.each { |row| puts row.join }
   end
 end
-
-# b = Board.new
-# b.populate_board
-# d = Display.new(b)
-# while true
-#   d.render
-#   d.get_input
-# end
